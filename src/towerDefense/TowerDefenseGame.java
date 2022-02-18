@@ -291,6 +291,7 @@ public class TowerDefenseGame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             TowerDefenseGame frame = new TowerDefenseGame();
 
+            frame.setName("Towerdefense Game");
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
