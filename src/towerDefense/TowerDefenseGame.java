@@ -232,19 +232,23 @@ public class TowerDefenseGame extends javax.swing.JFrame {
 
         DrawManager drawManager = gameController.getTileMap().getDrawManager();
 
-        if (gameController.getTileMap().getTile(x / 22, y / 22).hasTower() && tileTypeDragged == Tile.TileType.FLOOR) {
-            Tower tower =  gameController.getTileMap().getTile(x / 22, y / 22).getTower();
+        if (MouseEvent.BUTTON1 == evt.getButton()) {
+            if (gameController.getTileMap().getTile(x / 22, y / 22) != null) {
+                if (gameController.getTileMap().getTile(x / 22, y / 22).hasTower() && tileTypeDragged == Tile.TileType.FLOOR) {
+                    Tower tower = gameController.getTileMap().getTile(x / 22, y / 22).getTower();
 
-            gameController.getTowerController().removeTower(tower);
-            gameController.getTileMap().getTile(x, y).setTower(null);
+                    gameController.getTowerController().removeTower(tower);
+                    gameController.getTileMap().getTile(x / 22, y / 22).setTower(null);
 
-            gameController.addCoins(tower.getCost() / 2);
-        }
+                    gameController.addCoins(tower.getCost() / 2);
+                }
 
-        drawManager.drawPoint(x, y, tileTypeDragged);
+                drawManager.drawPoint(x, y, tileTypeDragged);
 
-        if (pathfinder.findPath(0, 0, gameController.getTileMap().getWidth() - 1, gameController.getTileMap().getHeight() - 1) == null && tileTypeDragged != Tile.TileType.FLOOR) {
-            drawManager.drawPoint(x, y, oldTileTypeDragged);
+                if (pathfinder.findPath(0, 0, gameController.getTileMap().getWidth() - 1, gameController.getTileMap().getHeight() - 1) == null && tileTypeDragged != Tile.TileType.FLOOR) {
+                    drawManager.drawPoint(x, y, oldTileTypeDragged);
+                }
+            }
         }
     }//GEN-LAST:event_zeichenPanel1MouseDragged
 
