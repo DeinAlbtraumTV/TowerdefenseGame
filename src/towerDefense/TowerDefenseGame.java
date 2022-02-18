@@ -232,7 +232,7 @@ public class TowerDefenseGame extends javax.swing.JFrame {
 
         DrawManager drawManager = gameController.getTileMap().getDrawManager();
 
-        if (MouseEvent.BUTTON1 == evt.getButton()) {
+        if ((evt.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == MouseEvent.BUTTON1_DOWN_MASK) {
             if (gameController.getTileMap().getTile(x / 22, y / 22) != null) {
                 if (gameController.getTileMap().getTile(x / 22, y / 22).hasTower() && tileTypeDragged == Tile.TileType.FLOOR) {
                     Tower tower = gameController.getTileMap().getTile(x / 22, y / 22).getTower();
