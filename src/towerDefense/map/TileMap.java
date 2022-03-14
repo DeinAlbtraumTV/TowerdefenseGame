@@ -4,12 +4,16 @@ import towerDefense.map.Tile.TileType;
 import towerDefense.drawing.DrawManager;
 import towerDefense.enemies.EnemyPosition;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class TileMap {
 
     private final int size_x;
     private final int size_y;
+
+    private Point spawn;
+    private Point castle;
 
     private final Tile[][] tiles;
 
@@ -58,5 +62,25 @@ public class TileMap {
 
     public DrawManager getDrawManager() {
         return drawManager;
+    }
+
+    public Point getSpawn() {
+        return spawn;
+    }
+
+    public Point getCastle() {
+        return castle;
+    }
+
+    public void setSpawn(int x, int y) {
+        getTile(x, y).setType(TileType.SPAWN);
+
+        spawn = new Point(x, y);
+    }
+
+    public void setCastle(int x, int y) {
+        getTile(x, y).setType(TileType.CASTLE);
+
+        castle = new Point(x, y);
     }
 }

@@ -1,8 +1,8 @@
 package towerDefense.enemies;
 
 import towerDefense.map.TileMap;
-import towerDefense.TowerDefenseGame;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import static towerDefense.TowerDefenseGame.gameController;
@@ -38,18 +38,25 @@ public class EnemyController {
         int tankEnemies = (wave < 5 ? 0 : wave * (((wave - 6) * difficulty) / 20) + 2);
         int runnerEnemies = (wave < 10 ? 0 : (int) (Math.pow(wave, 2) * ((wave + (difficulty * wave)) / 1500.) + 1));
 
+        Point spawn = gameController.getTileMap().getSpawn();
+
+        if (wave % 5 == 0) {
+            Enemy enemy = new Enemy((wave / 5D) * 10, 1000F / gameController.getFps(), spawn.x, spawn.y, (wave / 5) * 10);
+            enemies.add(enemy);
+        }
+
         for (int i = 0; i < basicEnemies; i++) {
-            BasicEnemy enemy = new BasicEnemy();
+            BasicEnemy enemy = new BasicEnemy(wave / 5, spawn.x, spawn.y);
             enemies.add(enemy);
         }
 
         for (int i = 0; i < tankEnemies; i++) {
-            TankEnemy enemy = new TankEnemy();
+            TankEnemy enemy = new TankEnemy(wave / 5, spawn.x, spawn.y);
             enemies.add(enemy);
         }
 
         for (int i = 0; i < runnerEnemies; i++) {
-            RunnerEnemy enemy = new RunnerEnemy();
+            RunnerEnemy enemy = new RunnerEnemy(wave / 5, spawn.x, spawn.y);
             enemies.add(enemy);
         }
     }
@@ -79,16 +86,17 @@ public class EnemyController {
         for ( Enemy deadEnemy : deadEnemies ) {
             map.getTile(deadEnemy.getPosition()).setEnemy(null);
             enemies.remove(deadEnemy);
-            gameController.addCoins(5);
+            gameController.addCoins(deadEnemy.getLoot());
         }
 
         if (enemies.isEmpty()) {
             framesSinceLastWave++;
         }
 
-        if (framesSinceLastWave >= 200) {
+        if (framesSinceLastWave >= 200 && gameController.canSpawnNextWave()) {
             spawnNextWave();
             framesSinceLastWave = 0;
+            gameController.spawnNextWave(false);
         }
     }
 
@@ -98,5 +106,13 @@ public class EnemyController {
 
     public int getEnemiesRemaining() {
         return enemies.size();
+    }
+
+    public void setWave(int wave) {
+        this.wave = wave;
+    }
+
+    public void clearEnemies() {
+        enemies.clear();
     }
 }

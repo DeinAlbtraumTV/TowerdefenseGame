@@ -2,6 +2,7 @@ package towerDefense.towers;
 
 import towerDefense.drawing.DamageLine;
 import towerDefense.enemies.Enemy;
+import towerDefense.enemies.EnemyPriority;
 import towerDefense.map.Tile;
 
 import java.awt.*;

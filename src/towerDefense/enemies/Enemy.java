@@ -21,6 +21,8 @@ public class Enemy {
     private int framesSinceLastMove;
     private int stepsRemaining;
 
+    private final int loot;
+
     public Enemy() {
         this.hp = 5.;
         this.maxHP = hp;
@@ -36,10 +38,20 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point spawn = gameController.getTileMap().getSpawn();
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                spawn.x,
+                spawn.y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        loot = 2;
     }
 
-    public Enemy(Color color) {
+    public Enemy(Color color, int loot) {
         this.hp = 5.;
         this.maxHP = hp;
         this.speed = 1000F / gameController.getFps();
@@ -52,10 +64,20 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point spawn = gameController.getTileMap().getSpawn();
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                spawn.x,
+                spawn.y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
-    public Enemy(double hp, double speed) {
+    public Enemy(double hp, double speed, int loot) {
         this.hp = hp;
         this.maxHP = hp;
         this.speed = speed;
@@ -70,10 +92,20 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point spawn = gameController.getTileMap().getSpawn();
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                spawn.x,
+                spawn.y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
-    public Enemy(double hp, double speed, Color color) {
+    public Enemy(double hp, double speed, Color color, int loot) {
         this.hp = hp;
         this.maxHP = hp;
         this.speed = speed;
@@ -86,13 +118,23 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point spawn = gameController.getTileMap().getSpawn();
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                spawn.x,
+                spawn.y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
-    public Enemy(int pos_x, int pos_y) {
+    public Enemy(int pos_x, int pos_y, int loot) {
         this.hp = 5.;
         this.maxHP = hp;
-        this.speed = 0.025;
+        this.speed = 1000F / gameController.getFps();
         this.startingSpeed = speed;
 
         position = new EnemyPosition(pos_x, pos_y);
@@ -104,10 +146,44 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                pos_x,
+                pos_y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
-    public Enemy(double hp, double speed, int pos_x, int pos_y) {
+    public Enemy(int pos_x, int pos_y, Color color, int loot) {
+        this.hp = 5.;
+        this.maxHP = hp;
+        this.speed = 1000F / gameController.getFps();
+        this.startingSpeed = speed;
+
+        position = new EnemyPosition(pos_x, pos_y);
+
+        this.color = color;
+
+        framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
+        framesSinceLastMove = 0;
+
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                pos_x,
+                pos_y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
+    }
+
+    public Enemy(double hp, double speed, int pos_x, int pos_y, int loot) {
         this.hp = hp;
         this.maxHP = hp;
         this.speed = speed;
@@ -122,10 +198,19 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                pos_x,
+                pos_y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
-    public Enemy(double hp, double speed, int pos_x, int pos_y, Color color) {
+    public Enemy(double hp, double speed, int pos_x, int pos_y, Color color, int loot) {
         this.hp = hp;
         this.maxHP = hp;
         this.speed = speed;
@@ -138,7 +223,16 @@ public class Enemy {
         framesUntilMove = (int) (1000 / speed) * (40 / gameController.getFps());
         framesSinceLastMove = 0;
 
-        stepsRemaining = 0;
+        Point castle = gameController.getTileMap().getCastle();
+
+        stepsRemaining = gameController.getPathfinder().findPath(
+                pos_x,
+                pos_y,
+                castle.x,
+                castle.y
+        ).getLength();
+
+        this.loot = loot;
     }
 
     public void moveTo(double x, double y) {
@@ -225,5 +319,9 @@ public class Enemy {
     public void reset() {
         this.hp = maxHP;
         this.speed = startingSpeed;
+    }
+
+    public int getLoot() {
+        return loot;
     }
 }

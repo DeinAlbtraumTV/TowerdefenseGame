@@ -11,7 +11,7 @@ public class Tile {
         FLOOR (Color.WHITE),
         WALL (Color.BLACK),
         ENEMY (Color.CYAN),
-        ROCK (Color.PINK),
+        ROCK (Color.GRAY),
         SPAWN (Color.RED),
         CASTLE (Color.GREEN);
 

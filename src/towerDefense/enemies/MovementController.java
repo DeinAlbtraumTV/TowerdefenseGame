@@ -5,14 +5,18 @@ import towerDefense.enemies.pathfinding.Path;
 import towerDefense.enemies.pathfinding.Step;
 import towerDefense.map.TileMap;
 
+import java.awt.*;
+
 public class MovementController {
     public static synchronized void moveEnemy(Enemy enemy, TileMap map) {
-        map.getTile(enemy.getPosX(), enemy.getPosY()).setEnemy(null);
+		map.getTile(enemy.getPosX(), enemy.getPosY()).setEnemy(null);
 	
 		enemy.setFramesSinceLastMove(enemy.getFramesSinceLastMove() + 1);
 
 		if (enemy.getFramesSinceLastMove() > enemy.getFramesUntilMove()) {
-			Path path = gameController.getPathfinder().findPath(enemy.getPosX(), enemy.getPosY(), map.getWidth() - 1, map.getHeight() - 1);
+			Point castle = gameController.getTileMap().getCastle();
+
+			Path path = gameController.getPathfinder().findPath(enemy.getPosX(), enemy.getPosY(), castle.x, castle.y);
 
 			if (path == null) {
 				if (!map.isTileBlocked(0, 0) && !map.getTile(0, 0).hasEnemy()) {

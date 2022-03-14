@@ -1,6 +1,4 @@
-package towerDefense.towers;
-
-import towerDefense.enemies.Enemy;
+package towerDefense.enemies;
 
 public class EnemyPriority implements Comparable<EnemyPriority> {
     private final Enemy enemy;
