@@ -226,14 +226,9 @@ public class TowerDefenseGame extends javax.swing.JFrame {
         int x = evt.getX();
         int y = evt.getY();
 
-        if (x / 22 < 0 || x / 22 >= size_x) {
-            System.out.println(x / 22);
-            return;
-        }
-        if (y / 22 < 0 || y / 22 >= size_y) {
-            System.out.println(y / 22);
-            return;
-        }
+        if (x / 22 < 0 || x / 22 >= size_x) return;
+
+        if (y / 22 < 0 || y / 22 >= size_y) return;
 
         if (MouseEvent.BUTTON1 == evt.getButton()) {
             DrawManager drawManager = gameController.getTileMap().getDrawManager();
@@ -242,10 +237,7 @@ public class TowerDefenseGame extends javax.swing.JFrame {
 
             Tile.TileType oldTileType = tileType;
 
-            if (tileType != Tile.TileType.FLOOR && tileType != Tile.TileType.WALL) {
-                System.out.println(tileType);
-                return;
-            }
+            if (tileType != Tile.TileType.FLOOR && tileType != Tile.TileType.WALL) return;
 
             if (tileType != Tile.TileType.WALL)
                 tileType = Tile.TileType.WALL;
