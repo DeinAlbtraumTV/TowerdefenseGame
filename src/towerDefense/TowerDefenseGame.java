@@ -1,15 +1,21 @@
 package towerDefense;
 
-import towerDefense.map.Tile;
+import towerDefense.dialogs.components.ButtonComponent;
+import towerDefense.dialogs.components.ComponentBorder;
+import towerDefense.dialogs.components.ComponentContainer;
+import towerDefense.dialogs.events.ListenerAdapter;
+import towerDefense.dialogs.events.mouse.ClickEvent;
+import towerDefense.dialogs.groups.ButtonGroup;
 import towerDefense.drawing.DrawManager;
 import towerDefense.drawing.ZeichenPanel;
 import towerDefense.enemies.EnemyController;
 import towerDefense.enemies.pathfinding.ManhattanHeuristic;
 import towerDefense.enemies.pathfinding.Pathfinder;
 import towerDefense.game.GameController;
-import towerDefense.towers.BasicTower;
-import towerDefense.towers.Tower;
-import towerDefense.towers.TowerController;
+import towerDefense.listeners.TowerMenuButtonListener;
+import towerDefense.listeners.UpgradeMenuButtonListener;
+import towerDefense.map.Tile;
+import towerDefense.towers.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,9 +39,11 @@ public class TowerDefenseGame extends javax.swing.JFrame {
 
     private static final double maxHp = 5.;
 
-    public static final GameController gameController = new GameController(maxHp, 20, size_x, size_y, difficulty, 40);
+    public static final GameController gameController = new GameController(maxHp, 30, size_x, size_y, difficulty, 40);
 
     public static ZeichenPanel zeichenPanel;
+    public static ComponentContainer componentContainer;
+    public static TowerType selectedTower = TowerType.BASIC;
 
     private final ScheduledExecutorService scheduledExecutorService;
 
@@ -91,10 +99,75 @@ public class TowerDefenseGame extends javax.swing.JFrame {
         mainLoop = scheduledExecutorService.scheduleAtFixedRate(mainTask, 0L, 1000 / gameController.getFps(), TimeUnit.MILLISECONDS);
 
         zeichenPanel = zeichenPanel1;
+        componentContainer = componentContainer1;
     }
 
     //GEN-BEGIN:initComponents
     private void initComponents() {
+
+        componentContainer1 = new ComponentContainer(600, 200);
+
+        ButtonComponent towerMenuButton = new ButtonComponent(0, 10, 100, 26, "Towers");
+        ButtonComponent upgradesMenuButton = new ButtonComponent(110, 10, 100, 26, "Upgrades");
+
+        ButtonComponent basicTowerButton = new ButtonComponent(0, 40, 26, 26, "");
+        ButtonComponent laserTowerButton = new ButtonComponent(36, 40, 26, 26, "");
+        ButtonComponent lightingTowerButton = new ButtonComponent(72, 40, 26, 26, "");
+
+        ComponentBorder border = new ComponentBorder(4);
+        ComponentBorder towerButtonBorder = new ComponentBorder(4, Color.WHITE);
+        ComponentBorder selectedButtonBorder = new ComponentBorder(4, Color.GREEN);
+
+        towerMenuButton.setBorder(border);
+        towerMenuButton.addEventListeners(new TowerMenuButtonListener());
+        towerMenuButton.setBackgroundColor(Color.GREEN);
+
+        upgradesMenuButton.setBorder(border);
+        upgradesMenuButton.addEventListeners(new UpgradeMenuButtonListener());
+        upgradesMenuButton.setBackgroundColor(Color.RED);
+
+        basicTowerButton.setBorder(selectedButtonBorder);
+        basicTowerButton.setBackgroundColor(BasicTower.getTowerColor());
+        basicTowerButton.addEventListeners(new ListenerAdapter(){
+            @Override
+            public void onClickEvent(ClickEvent event) {
+                super.onClickEvent(event);
+
+                selectedTower = TowerType.BASIC;
+                ButtonGroup.getButtonGroup("towerButtons").getButtons().forEach(b -> b.setBorder(towerButtonBorder));
+                basicTowerButton.setBorder(selectedButtonBorder);
+            }
+        });
+
+        laserTowerButton.setBorder(towerButtonBorder);
+        laserTowerButton.setBackgroundColor(LaserTower.getTowerColor());
+        laserTowerButton.addEventListeners(new ListenerAdapter(){
+            @Override
+            public void onClickEvent(ClickEvent event) {
+                super.onClickEvent(event);
+
+                selectedTower = TowerType.LASER;
+                ButtonGroup.getButtonGroup("towerButtons").getButtons().forEach(b -> b.setBorder(towerButtonBorder));
+                laserTowerButton.setBorder(selectedButtonBorder);
+            }
+        });
+
+        lightingTowerButton.setBorder(towerButtonBorder);
+        lightingTowerButton.setBackgroundColor(LightingTower.getTowerColor());
+        lightingTowerButton.addEventListeners(new ListenerAdapter(){
+            @Override
+            public void onClickEvent(ClickEvent event) {
+                super.onClickEvent(event);
+
+                selectedTower = TowerType.LIGHTING;
+                ButtonGroup.getButtonGroup("towerButtons").getButtons().forEach(b -> b.setBorder(towerButtonBorder));
+                lightingTowerButton.setBorder(selectedButtonBorder);
+            }
+        });
+
+        ButtonGroup.getButtonGroup("towerButtons").addButtons(basicTowerButton, laserTowerButton, lightingTowerButton);
+
+        componentContainer1.addComponents(towerMenuButton, upgradesMenuButton, basicTowerButton, laserTowerButton, lightingTowerButton);
 
         speedUpButton = new JButton();
         zeichenPanel1 = new ZeichenPanel();
@@ -176,13 +249,16 @@ public class TowerDefenseGame extends javax.swing.JFrame {
                 .addComponent(zeichenPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        )
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(componentContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    )
+                        .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,12 +273,13 @@ public class TowerDefenseGame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(componentContainer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 0, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(nextWaveButton)
-                                    .addComponent(toggleAutoWaveButton)
-                                    .addComponent(speedUpButton))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nextWaveButton)
+                                .addComponent(toggleAutoWaveButton)
+                                .addComponent(speedUpButton))
                     .addContainerGap())
         );
 
@@ -265,7 +342,7 @@ public class TowerDefenseGame extends javax.swing.JFrame {
             y = y / 22;
 
             if (gameController.getTileMap().getTile(x, y).getType().equals(Tile.TileType.WALL) && !gameController.getTileMap().getTile(x, y).hasTower()) {
-                BasicTower tower = new BasicTower(x, y);
+                Tower tower = Tower.createTower(x,y, selectedTower);
 
                 if (gameController.getCoins() >= tower.getCost()) {
                     gameController.getTowerController().addTower(tower);
@@ -380,14 +457,15 @@ public class TowerDefenseGame extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    //GEN-BEGIN:variables
     private JButton speedUpButton;
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;
     private ZeichenPanel zeichenPanel1;
-    // End of variables declaration//GEN-END:variables
+    //GEN-END:variables
     private JButton nextWaveButton;
     private JButton toggleAutoWaveButton;
+    private ComponentContainer componentContainer1;
 }

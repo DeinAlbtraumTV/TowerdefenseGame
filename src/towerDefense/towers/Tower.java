@@ -13,6 +13,18 @@ import static towerDefense.TowerDefenseGame.zeichenPanel;
 
 public class Tower {
 
+    public static Tower createTower(int x, int y, TowerType type) {
+        switch (type) {
+            case BASIC:
+            default:
+                return new BasicTower(x,y);
+            case LASER:
+                return new LaserTower(x,y);
+            case LIGHTING:
+                return new LightingTower(x,y);
+        }
+    }
+
     private final Color color;
 
     private final int x;
@@ -84,7 +96,7 @@ public class Tower {
     public void damageEnemy(Enemy enemy) {
         enemy.damage(damage);
 
-        zeichenPanel.addDamageLine(new DamageLine((this.x * 22) + 11, (this.y * 22) + 11, (enemy.getPosX() * 22) + 11, (enemy.getPosY() * 22) + 11, 20));
+        zeichenPanel.addDamageLine(new DamageLine((this.x * 22) + 11, (this.y * 22) + 11, (enemy.getPosX() * 22) + 11, (enemy.getPosY() * 22) + 11, (attackRate / 2) + 2));
     }
 
     public Color getColor() {
