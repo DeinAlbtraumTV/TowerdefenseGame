@@ -169,11 +169,10 @@ public class ZeichenPanel extends JPanel {
 
                     if (url == null) {
                         url = getClass().getResource("/misc/Unknown.png");
-                        System.out.println(imagePath);
                     }
 
                     Image image = new ImageIcon(url).getImage();
-                    g2d.drawImage(image, i * GRID_SIZE, j * GRID_SIZE, this);
+                    g2d.drawImage(image, i * GRID_SIZE, j * GRID_SIZE, GRID_SIZE, GRID_SIZE, this);
 
                     if (tile.hasEnemy()) {
                         Enemy enemy = tile.getEnemy();
